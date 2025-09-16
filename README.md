@@ -1,3 +1,3 @@
-# cpts322GroupProject  
-Topic: Roommate Matcher  
+# Roommate Finder  
+cpts322, Fall 2025  
 Team Members: Jordan Vieira, Annalee Nersten, Emery Town, Joseph Buchanan
