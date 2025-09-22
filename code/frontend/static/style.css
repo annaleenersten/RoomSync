@@ -1,0 +1,17 @@
+/*
+style.css
+
+TEAM OWNER: Annalee (Frontend & UI)
+Sprint 1 Tasks:
+- Add basic layout, form spacing, font styling.
+- Optional: style the navbar.
+*/
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+
+nav a {
+  margin: 0 10px;
+}

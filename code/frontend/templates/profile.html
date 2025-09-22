@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<!--
+profile.html
+
+TEAM OWNER: Annalee (Frontend),
+works with Database 1 (Backend/DB) for saving preferences.
+-->
+  <h2>Profile Setup</h2>
+  <form method="POST">
+    <label>Budget:</label>
+    <input type="text" name="budget"><br>
+    <label>Location:</label>
+    <input type="text" name="location"><br>
+    <label>Lifestyle:</label>
+    <input type="text" name="lifestyle"><br>
+    <button type="submit">Save Profile</button>
+  </form>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<!--
+matches.html
+
+TEAM OWNER: Annalee (Frontend),
+works with Database 2 (Backend/DB) for displaying matches.
+-->
+  <h2>Matches</h2>
+  <ul>
+    {% for profile in profiles %}
+      <li>{{ profile }}</li>
+    {% else %}
+      <li>No profiles yet</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

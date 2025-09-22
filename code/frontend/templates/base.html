@@ -1,0 +1,27 @@
+<!--
+base.html
+Shared layout for all pages.
+
+Sprint 1 Tasks:
+- Add common navbar (Register, Login, Profile, Matches).
+
+TEAM OWNER: Annalee (Frontend & UI)
+-->
+<html>
+  <head>
+    <title>Roommate Finder</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body>
+    <nav>
+      <!-- Annalee: Navigation links -->
+      <a href="{{ url_for('register') }}">Register</a>
+      <a href="{{ url_for('login') }}">Login</a>
+      <a href="{{ url_for('profile') }}">Profile</a>
+      <a href="{{ url_for('matches') }}">Matches</a>
+    </nav>
+    <div>
+      {% block content %}{% endblock %}
+    </div>
+  </body>
+</html>

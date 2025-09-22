@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<!--
+register.html
+
+TEAM OWNER: Annalee (Frontend), 
+works with Jordan (Backend) for /register logic.
+-->
+  <h2>Register</h2>
+  <form method="POST">
+    <label>Email:</label>
+    <input type="text" name="email" required><br>
+    <label>Username:</label>
+    <input type="text" name="username" required><br>
+    <label>Password:</label>
+    <input type="password" name="password" required><br>
+    <button type="submit">Register</button>
+  </form>
+{% endblock %}
