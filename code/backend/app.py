@@ -58,13 +58,48 @@ def login():
         return "Invalid login!"
     return "Send POST with username & password"
 
+#---------------------
+# Joe - Update Preferences
 @app.route("/profile", methods=["GET", "POST"])
 def profile():
-    # Database 1 (Profile setup, DB insert)
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    db = get_db()
+    user_id = session["user_id"] # Gets userID
+    message = None
+
+    # Only run if user submits form. Takes values that user inputted.
     if request.method == "POST":
-        # TODO: Save profile info
-        pass
-    return render_template("profile.html")
+        budget = request.form["budget"]
+        location = request.form["location"]
+        lifestyle = request.form["lifestyle"]
+
+        #Gets row of data with userID
+        existing = db.execute("SELECT * FROM profiles WHERE user_id=?", (user_id,)).fetchone()
+
+        if existing: # If user already has profile, update values
+            db.execute("""
+                UPDATE profiles
+                SET budget=?, location=?, lifestyle=?
+                WHERE user_id=?
+            """, (budget, location, lifestyle, user_id))
+        else: # Otherwise, create a new profile row to user
+            db.execute("""
+                INSERT INTO profiles (user_id, budget, location, lifestyle)
+                VALUES (?, ?, ?, ?)
+            """, (user_id, budget, location, lifestyle))
+
+        db.commit()
+        # If successfully changed, return this message to reflect that
+        message = "Profile updated."
+
+    profile = db.execute("SELECT * FROM profiles WHERE user_id=?", (user_id,)).fetchone()
+
+    
+    return render_template("profile.html", message=message)
+
+
 
 @app.route("/matches")
 def matches():
