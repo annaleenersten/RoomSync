@@ -16,31 +16,47 @@ Sprint 1 Tasks:
 TEAM OWNER: Jordan (Backend & Security)
 """
 
-from flask import Flask, render_template, request, redirect, url_for
-import database
-import auth_utils
+from flask import Flask, render_template, request, redirect, url_for, session
+from auth_utils import hash_password, verify_password
+from database import init_db, get_db
+
 
 app = Flask(__name__)
+app.secret_key = "supersecretkey"  # Needed for session management
+init_db()
 
 @app.route("/")
 def index():
     return redirect(url_for("login"))
 
+# ------------------------
+# Jordan – Registration
+# ------------------------
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    # Jordan (with database support from Database 1)
     if request.method == "POST":
-        # TODO: Handle registration logic
-        pass
-    return render_template("register.html")
+        username = request.form["username"]
+        password = hash_password(request.form["password"])
+        db = get_db()
+        db.execute("INSERT INTO users (username, password_hash) VALUES (?, ?)", (username, password))
+        db.commit()
+        return "User registered!"  # (simple message for now)
+    return "Send POST with username & password"
 
+# ------------------------
+# Jordan – Login
+# ------------------------
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    # Jordan (login/authentication logic)
     if request.method == "POST":
-        # TODO: Handle login logic
-        pass
-    return render_template("login.html")
+        username = request.form["username"]
+        password = request.form["password"]
+        db = get_db()
+        user = db.execute("SELECT * FROM users WHERE username=?", (username,)).fetchone()
+        if user and verify_password(password, user["password_hash"]):
+            return f"Login success for {username}"
+        return "Invalid login!"
+    return "Send POST with username & password"
 
 @app.route("/profile", methods=["GET", "POST"])
 def profile():

@@ -14,9 +14,19 @@ Sprint 1 Tasks:
 TEAM OWNER: Database 1 (Profiles) & Database 2 (Matches)
 """
 
+import os
 import sqlite3
 
-DB_PATH = "../data/roommate.db"
+# Get the directory this file lives in
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+
+# Build an absolute path to ../data/roommate.db
+DB_PATH = os.path.join(BASE_DIR, "..", "..", "data", "roommate.db")
+
+def get_db():
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
 
 def init_db():
     # Shared: Database 1 + Database 2
