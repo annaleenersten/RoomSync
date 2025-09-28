@@ -1,17 +1,54 @@
-/*
-style.css
+@import url('https://fonts.googleapis.com/css2?family=Encode+Sans+Expanded:wght@100;200;300;400;500;600;700;800;900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
 
-TEAM OWNER: Annalee (Frontend & UI)
-Sprint 1 Tasks:
-- Add basic layout, form spacing, font styling.
-- Optional: style the navbar.
-*/
-
-body {
-  font-family: Arial, sans-serif;
-  margin: 20px;
+body{
+    font-family: "Encode Sans Expanded", sans-serif;
+    font-weight: 400;
+    font-style: normal;
 }
 
-nav a {
-  margin: 0 10px;
+/* navbar */
+nav a{
+    color: white;
+}
+
+.navbar-brand:hover{
+    color: white;
+}
+
+
+.navbar-nav a:hover{
+    color: rgb(26, 179, 255);
+}
+
+
+/* login page */
+
+.card{
+    width: 25%;
+}
+
+.card h3{
+    text-align: center;
+    padding-bottom: 10%;
+}
+
+.card{
+    padding-top: 2%;
+    padding-bottom: 3%;
+    border-radius: 10%;
+    border: 0.08em solid black;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+
+/* match page */
+
+#matchCard{
+    border-radius: 0%;
+    /* border: 0.08em solid rgb(26, 179, 255); */
+}
+
+#matchTitle{
+    text-align: center;
+    margin: 4%;
 }

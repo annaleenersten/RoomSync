@@ -1,19 +1,49 @@
-{% extends "base.html" %}
-{% block content %}
-<!--
-register.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-TEAM OWNER: Annalee (Frontend), 
-works with Jordan (Backend) for /register logic.
--->
-  <h2>Register</h2>
-  <form method="POST">
-    <label>Email:</label>
-    <input type="text" name="email" required><br>
-    <label>Username:</label>
-    <input type="text" name="username" required><br>
-    <label>Password:</label>
-    <input type="password" name="password" required><br>
-    <button type="submit">Register</button>
-  </form>
-{% endblock %}
+<div class="d-flex justify-content-center align-items-center vh-100">
+  <div class="card">
+    <div class="card-body">
+      <h3>Create Account</h3>
+
+    <form>
+      <div class="mb-3">
+        <label for="inputEmail" class="form-label">Email</label>
+        <input type="username" class="form-control" id="inputEmail">
+      </div>
+
+      <div class="mb-3">
+        <label for="inputUsername" class="form-label">Username</label>
+        <input type="username" class="form-control" id="inputUsername">
+      </div>
+      
+      <div class="mb-3">
+        <label for="inputPassword" class="form-label">Password</label>
+        <input type="password" class="form-control" id="inputPassword">
+      </div>
+
+      <div class="d-grid gap-2">
+        <button type="button" class="btn btn-dark" onclick="window.location.href='matches.html'">Register</button>
+      </div>
+
+    </form>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
