@@ -11,7 +11,7 @@ Sprint 1 Tasks:
   - add_profile(user_id, budget, location, lifestyle).
   - get_all_profiles() → return all profiles (for matches).
 
-TEAM OWNER: Database 1 (Profiles) & Database 2 (Matches)
+TEAM OWNER: Database 1 (Profiles) & Database 2 (Matches) (Emery)
 """
 
 import os
@@ -55,16 +55,48 @@ def init_db():
 
 def add_user(email, username, hashed_pw):
     # Database 1
-    pass
+    conn = sqlite3.connect(DB_PATH)
+    try: 
+        c= conn.cursor() 
+        c.execute("""
+            INSERT INTO users (email, username, password_hash)
+            VALUES (?, ?, ?)
+        """, (email, username, hashed_pw))
+        conn.commit()
+        return c.lastrowid
+    except sqlite3.IntegrityError:
+        return None
+    finally:
+        conn.close()
+    #pass
 
 def get_user_by_email(email):
     # Database 1
-    pass
+    conn = sqlite3.connect(DB_PATH)
+    c= conn.cursor() 
+    c.execute("SELECT * FROM users WHERE email=?", (email,))
+    row = c.fetchone()
+    conn.close()
+    return dict(row) if row else None
+    #pass
 
 def add_profile(user_id, budget, location, lifestyle):
     # Database 1
+    conn = sqlite3.connect(DB_PATH)
+    c= conn.cursor() 
+    c.execute("""
+        INSERT INTO profiles (user_id, budget, location, lifestyle)
+        VALUES (?, ?, ?, ?)
+    """, (user_id, budget, location, lifestyle))
+    conn.commit()
+    conn.close()
     pass
 
 def get_all_profiles():
     # Database 2
-    return []
+    conn = sqlite3.connect(DB_PATH)
+    c= conn.cursor() 
+    c.execute("SELECT * FROM profiles")
+    rows = c.fetchall()
+    conn.close()
+    return [dict(row) for row in rows]
