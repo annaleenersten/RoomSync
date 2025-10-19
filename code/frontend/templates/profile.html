@@ -30,3 +30,39 @@
 
 </body>
 </html>
+
+<!-- 
+19OCT Note from backend (delete when finished):
+
+Data sources and available variables
+
+  From database.py (backend data layer):
+    - get_profile_by_user_id(user_id)      -> returns one user’s profile only
+    - get_user_and_profile(user_id)        -> returns user + profile fields (used here)
+    - get_profiles_except(user_id)         -> returns list of all other users’ profiles
+
+  From matching.py (algorithm layer):
+    - compatibility_score(me, other)
+    - rank_candidates(me, candidates)
+
+
+Template context for this page (/profile):
+
+  You receive a single variable named "profile" (a dict) containing:
+    - profile.username
+    - profile.email
+    - profile.budget
+    - profile.location
+    - profile.lifestyle
+    (any of these may be empty strings if not yet set)
+
+You can use these in HTML like:
+  <p>{{ profile.username }}</p>
+  <p>{{ profile.location or "Not specified" }}</p>
+
+When the user submits edits:
+  Form fields should POST with names:
+    budget, location, lifestyle
+
+Backend route automatically updates or inserts this profile info
+-->

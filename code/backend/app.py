@@ -2,24 +2,14 @@
 app.py
 Main Flask application entry point for Roommate Finder.
 
-Sprint 1 Tasks:
-- Set up Flask app and routing.
-- Implement routes:
-  - '/' → landing page (optional, can redirect to login).
-  - '/register' → show registration form and handle account creation.
-  - '/login' → show login form and handle authentication.
-  - '/profile' → show profile setup page and save preferences.
-  - '/matches' → show list of profiles (basic, all users).
-- Connect routes to database functions in database.py.
-- Use auth_utils.py for password hashing and login checks.
-
 TEAM OWNER: Jordan (Backend & Security)
 """
 
 import os
 from flask import Flask, render_template, request, redirect, url_for, session
 from auth_utils import hash_password, verify_password
-from database import init_db, get_db, add_user, get_user_by_login, get_user_by_username
+from database import init_db, get_db, add_user, get_user_by_login, get_user_by_username, get_user_and_profile, get_profiles_except
+from matching import rank_candidates
 
 # ---- Tell Flask where templates/static actually are ----
 APP_DIR = os.path.dirname(os.path.abspath(__file__))          # code/backend
@@ -35,9 +25,9 @@ init_db()
 def index():
     return redirect(url_for("login"))
 
-# ------------------------
+# ---------------------------------------------------
 # Jordan – Registration (email + username + password)
-# ------------------------
+# ---------------------------------------------------
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "GET":
@@ -62,9 +52,9 @@ def register():
     db.commit()
     return redirect(url_for("login"))
 
-# ------------------------
-# Jordan – Login (username OR email)
-# ------------------------
+# ----------------------------------
+# Jordan – Login (username)
+# ----------------------------------
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "GET":
@@ -97,9 +87,9 @@ def profile():
 
     # Only run if user submits form. Takes values that user inputted.
     if request.method == "POST":
-        budget = request.form["budget"]
-        location = request.form["location"]
-        lifestyle = request.form["lifestyle"]
+        budget    = request.form.get("budget", "")
+        location  = request.form.get("location", "")
+        lifestyle = request.form.get("lifestyle", "")
 
         #Gets row of data with userID
         existing = db.execute("SELECT * FROM profiles WHERE user_id=?", (user_id,)).fetchone()
@@ -111,19 +101,18 @@ def profile():
                 WHERE user_id=?
             """, (budget, location, lifestyle, user_id))
         else: # Otherwise, create a new profile row to user
-            db.execute("""
-                INSERT INTO profiles (user_id, budget, location, lifestyle)
-                VALUES (?, ?, ?, ?)
-            """, (user_id, budget, location, lifestyle))
+            db.execute("INSERT INTO profiles (user_id, budget, location, lifestyle) VALUES (?, ?, ?, ?)",
+                       (user_id, budget, location, lifestyle))
 
         db.commit()
         # If successfully changed, return this message to reflect that
         message = "Profile updated."
 
-    profile_row = db.execute("SELECT * FROM profiles WHERE user_id=?", (user_id,)).fetchone()
+    profile_row = get_user_and_profile(user_id)  # username/email + profile fields
     return render_template("profile.html", message=message, profile=profile_row)
 
 
+# ----------------------------------
 @app.route("/logout")
 def logout():
     session.clear()
@@ -133,9 +122,15 @@ def logout():
 def matches():
     if "user_id" not in session:
         return redirect(url_for("login"))
-    # Database 2 (Matches view, DB fetch)
-    profiles = []  # TODO: Replace with database.get_all_profiles()
-    return render_template("matches.html", profiles=profiles)
+
+    user_id = session["user_id"]
+    me = get_user_and_profile(user_id) or {}
+    candidates = get_profiles_except(user_id)
+
+    matches_flat = candidates
+    ranked_list = rank_candidates(me, candidates)
+
+    return render_template("matches.html", profiles=matches_flat, ranked=ranked_list)
 
 @app.route("/admin/users")
 def admin_users():
@@ -147,6 +142,7 @@ def admin_users():
         html.append(f"<tr><td>{r['id']}</td><td>{r['email']}</td><td>{r['username']}</td></tr>")
     html.append("</table>")
     return "".join(html)
+# ----------------------------------
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -98,6 +98,48 @@ def get_user_by_login(login_identifier: str):
     conn.close()
     return dict(row) if row else None
 
+# Helpers for the frontend to access user profile data
+def get_profile_by_user_id(user_id: int):
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM profiles WHERE user_id=? LIMIT 1", (user_id,))
+    row = cur.fetchone()
+    conn.close()
+    return dict(row) if row else None
+
+def get_user_and_profile(user_id: int):
+    """Username + email + profile fields in one dict."""
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT u.id AS user_id, u.username, u.email,
+               p.budget, p.location, p.lifestyle
+        FROM users u
+        LEFT JOIN profiles p ON p.user_id = u.id
+        WHERE u.id=? LIMIT 1
+    """, (user_id,))
+    row = cur.fetchone()
+    conn.close()
+    return dict(row) if row else None
+
+def get_profiles_except(user_id: int):
+    """All other users with their profile fields (if any)."""
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT u.id AS user_id, u.username, u.email,
+               COALESCE(p.budget, '') AS budget,
+               COALESCE(p.location, '') AS location,
+               COALESCE(p.lifestyle, '') AS lifestyle
+        FROM users u
+        LEFT JOIN profiles p ON p.user_id = u.id
+        WHERE u.id <> ?
+        ORDER BY u.id
+    """, (user_id,))
+    rows = cur.fetchall()
+    conn.close()
+    return [dict(r) for r in rows]
+
 def get_user_by_email(email):
     # Database 1
     conn = sqlite3.connect(DB_PATH)
@@ -122,9 +164,9 @@ def add_profile(user_id, budget, location, lifestyle):
 
 def get_all_profiles():
     # Database 2
-    conn = sqlite3.connect(DB_PATH)
-    c= conn.cursor() 
-    c.execute("SELECT * FROM profiles")
-    rows = c.fetchall()
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM profiles")
+    rows = cur.fetchall()
     conn.close()
-    return [dict(row) for row in rows]
+    return [dict(r) for r in rows]
