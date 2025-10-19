@@ -15,19 +15,19 @@
     <div class="card-body">
       <h3>Login</h3>
 
-    <form>
+    <form action="/login" method="POST">
       <div class="mb-3">
         <label for="inputUsername" class="form-label">Username</label>
-        <input type="username" class="form-control" id="inputUsername">
+        <input type="text" class="form-control" id="inputUsername" name="username" required>
       </div>
       
       <div class="mb-3">
         <label for="inputPassword" class="form-label">Password</label>
-        <input type="password" class="form-control" id="inputPassword">
+        <input type="password" class="form-control" id="inputPassword" name="password" required>
       </div>
 
       <div class="d-grid gap-2">
-        <button type="button" class="btn btn-dark" onclick="window.location.href='matches.html'">Submit</button>
+        <button type="submit" class="btn btn-dark">Login</button>
       </div>
 
     </form>

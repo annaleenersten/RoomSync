@@ -50,25 +50,53 @@ def init_db():
             FOREIGN KEY(user_id) REFERENCES users(id)
         )
     """)
+
+    # Uniqueness for auth invariants
+    c.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_users_email ON users(email)")
+    c.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_users_username ON users(username)")
+
     conn.commit()
     conn.close()
 
-def add_user(email, username, hashed_pw):
+def add_user(email: str, username: str, hashed_pw: str):
     # Database 1
-    conn = sqlite3.connect(DB_PATH)
-    try: 
-        c= conn.cursor() 
-        c.execute("""
+    """Insert a new user; returns rowid or None on duplicate."""
+    conn = get_db()
+    try:
+        cur = conn.cursor()
+        cur.execute(
+            """
             INSERT INTO users (email, username, password_hash)
             VALUES (?, ?, ?)
-        """, (email, username, hashed_pw))
+            """,
+            (email, username, hashed_pw),
+        )
         conn.commit()
-        return c.lastrowid
+        return cur.lastrowid
     except sqlite3.IntegrityError:
-        return None
+        return None  # duplicate email or username
     finally:
         conn.close()
-    #pass
+
+def get_user_by_username(username: str):
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM users WHERE username=? LIMIT 1", (username,))
+    row = cur.fetchone()
+    conn.close()
+    return dict(row) if row else None
+
+def get_user_by_login(login_identifier: str):
+    """Return a user by username OR email."""
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(
+        "SELECT * FROM users WHERE username=? OR email=? LIMIT 1",
+        (login_identifier, login_identifier),
+    )
+    row = cur.fetchone()
+    conn.close()
+    return dict(row) if row else None
 
 def get_user_by_email(email):
     # Database 1

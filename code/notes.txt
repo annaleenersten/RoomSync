@@ -1,0 +1,40 @@
+Sprint 2:
+
+- When running the app, ensure you're in the ../code directory, and run:
+    python3 backend/app.py 
+
+    (this will ensure that all the page routing functions properly, can be chanegd later)
+
+- To quickly view the database of users, just go to the /admin/users extension in the web bar
+
+*****
+- Notes on how to implement matching.py:
+
+import statement:
+    from matching import compatibility_score, rank_candidates
+
+1. compatibility_score(me, other)
+    → Returns an int (0–100) score between two profiles.
+
+2. rank_candidates(me, candidates, top_k=None)
+    → Returns a sorted list:
+    
+        [
+        {"profile": <candidate_dict>, "score": <int>},
+        ...
+        ]
+    
+    Highest scores come first.
+
+Expected profile strcuture:
+
+    {
+    "user_id": 1,
+    "username": "alex",
+    "budget": "850",
+    "location": "Seattle",
+    "lifestyle": "early sleeper"
+    }
+
+*****
+
