@@ -23,7 +23,11 @@ init_db()
 
 @app.route("/")
 def index():
-    return redirect(url_for("login"))
+    return redirect(url_for("base"))
+
+@app.route("/base")
+def base():
+    return render_template("base.html")
 
 # ---------------------------------------------------
 # Jordan – Registration (email + username + password)
