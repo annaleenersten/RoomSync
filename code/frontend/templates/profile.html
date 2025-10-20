@@ -50,17 +50,20 @@
             <form id="editProfileForm" method="POST" action="{{ url_for('profile') }}">
               <div class="mb-3">
                 <label for="location" class="form-label">Location</label>
-                <input type="text" class="form-control" id="location" value="{{ profile.location }}">
+                <input type="text" class="form-control" id="location" name="location"
+                       value="{{ profile.location or '' }}">
               </div>
               <div class="mb-3">
                 <label for="budget" class="form-label">Budget</label>
-                <input type="text" class="form-control" id="budget" value="{{ profile.budget }}">
+                <input type="text" class="form-control" id="budget" name="budget"
+                       value="{{ profile.budget or '' }}">
               </div>
               <div class="mb-3">
                 <label for="lifestyle" class="form-label">Lifestyle</label>
-                <input type="text" class="form-control" id="lifestyle" value="{{ profile.lifestyle }}">
+                <input type="text" class="form-control" id="lifestyle" name="lifestyle"
+                       value="{{ profile.lifestyle or '' }}">
               </div>
-              <button type="submit" class="btn btn-outline-light w-100">Save Changes</button>
+              <button type="submit" class="btn btn-dark w-100">Save Changes</button>
             </form>
           </div>
         </div>
