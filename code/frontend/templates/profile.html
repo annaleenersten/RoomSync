@@ -17,8 +17,7 @@
             RoomSync</a>
 
         <div class="navbar-nav d-flex flex-row gap-3">
-          <!-- Trigger Modal -->
-            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit Profile</a>
+          <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit Profile</a>
           <a class="nav-link" href="{{ url_for('matches') }}">View Matches</a>
           <a class="nav-link" href="{{ url_for('logout') }}">Log Out</a>
         </div>
@@ -27,18 +26,22 @@
     </nav>
 
 
-    <p>{{ profile.username }}</p>
+    <div class = "container">
+  
+      <br>
+      <h3>{{ profile.username }}</h3>
+    
+      <br>
+      <h6>Email: {{ profile.email }}</h6>
 
-    <p>{{ profile.email }}</p>
+      <h6>Location: {{ profile.location }}</h6>
 
-    <p>{{ profile.location }}</p>
+      <h6>Budget: ${{ profile.budget }}</h6>
+    
+      <h6>Lifestyle: {{ profile.lifestyle }}</h6>
 
-    <p>{{ profile.budget }}</p>
+    </div>
 
-    <p>{{ profile.lifestyle }}</p>
-
-
-    <!-- Edit Profile Modal -->
     <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -63,7 +66,7 @@
                 <input type="text" class="form-control" id="lifestyle" name="lifestyle"
                        value="{{ profile.lifestyle or '' }}">
               </div>
-              <button type="submit" class="btn btn-dark w-100">Save Changes</button>
+              <button type="submit" class="btn btn-outline-light w-100">Save Changes</button>
             </form>
           </div>
         </div>
