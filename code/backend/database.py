@@ -47,6 +47,9 @@ def init_db():
             budget TEXT,
             location TEXT,
             lifestyle TEXT,
+            smoking TEXT, 
+            pets TEXT,
+            cleanliness TEXT,
             FOREIGN KEY(user_id) REFERENCES users(id)
         )
     """)
@@ -113,7 +116,7 @@ def get_user_and_profile(user_id: int):
     cur = conn.cursor()
     cur.execute("""
         SELECT u.id AS user_id, u.username, u.email,
-               p.budget, p.location, p.lifestyle
+               p.budget, p.location, p.lifestyle, p.smoking, p.pets, p.cleanliness
         FROM users u
         LEFT JOIN profiles p ON p.user_id = u.id
         WHERE u.id=? LIMIT 1
@@ -131,6 +134,9 @@ def get_profiles_except(user_id: int):
                COALESCE(p.budget, '') AS budget,
                COALESCE(p.location, '') AS location,
                COALESCE(p.lifestyle, '') AS lifestyle
+                COALESCE(p.smoking, '') AS smoking,
+                COALESCE(p.pets, '') AS pets,
+                COALESCE(p.cleanliness, '') AS cleanliness
         FROM users u
         LEFT JOIN profiles p ON p.user_id = u.id
         WHERE u.id <> ?
@@ -150,14 +156,14 @@ def get_user_by_email(email):
     return dict(row) if row else None
     #pass
 
-def add_profile(user_id, budget, location, lifestyle):
+def add_profile(user_id, budget, location, lifestyle, smoking, pets, cleanliness):
     # Database 1
     conn = sqlite3.connect(DB_PATH)
     c= conn.cursor() 
     c.execute("""
-        INSERT INTO profiles (user_id, budget, location, lifestyle)
-        VALUES (?, ?, ?, ?)
-    """, (user_id, budget, location, lifestyle))
+        INSERT INTO profiles (user_id, budget, location, lifestyle, smoking, pets, cleanliness)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    """, (user_id, budget, location, lifestyle, smoking, pets, cleanliness))
     conn.commit()
     conn.close()
     pass
