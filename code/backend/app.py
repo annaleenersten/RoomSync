@@ -86,34 +86,45 @@ def profile():
         return redirect(url_for("login"))
 
     db = get_db()
-    user_id = session["user_id"] # Gets userID
+    user_id = session["user_id"]
     message = None
 
-    # Only run if user submits form. Takes values that user inputted.
     if request.method == "POST":
-        budget    = request.form.get("budget", "")
-        location  = request.form.get("location", "")
-        lifestyle = request.form.get("lifestyle", "")
+        # Get form values safely and strip whitespace
+        budget = (request.form.get("budget") or "").strip()
+        location = (request.form.get("location") or "").strip()
+        lifestyle = (request.form.get("lifestyle") or "").strip()
+        smoking = (request.form.get("smoking") or "").strip()
+        pets = (request.form.get("pets") or "").strip()
+        cleanliness = (request.form.get("cleanliness") or "").strip()
 
-        #Gets row of data with userID
-        existing = db.execute("SELECT * FROM profiles WHERE user_id=?", (user_id,)).fetchone()
+        # Check if profile exists
+        profile_exists = db.execute(
+            "SELECT 1 FROM profiles WHERE user_id=?",
+            (user_id,)
+        ).fetchone()
 
-        if existing: # If user already has profile, update values
+        if profile_exists:
+            # Update existing record
             db.execute("""
                 UPDATE profiles
-                SET budget=?, location=?, lifestyle=?
+                SET budget=?, location=?, lifestyle=?, smoking=?, pets=?, cleanliness=?
                 WHERE user_id=?
-            """, (budget, location, lifestyle, user_id))
-        else: # Otherwise, create a new profile row to user
-            db.execute("INSERT INTO profiles (user_id, budget, location, lifestyle) VALUES (?, ?, ?, ?)",
-                       (user_id, budget, location, lifestyle))
+            """, (budget, location, lifestyle, smoking, pets, cleanliness, user_id))
+        else:
+            # Insert new record
+            db.execute("""
+                INSERT INTO profiles (user_id, budget, location, lifestyle, smoking, pets, cleanliness)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            """, (user_id, budget, location, lifestyle, smoking, pets, cleanliness))
 
         db.commit()
-        # If successfully changed, return this message to reflect that
-        message = "Profile updated."
+        message = "Profile updated successfully."
 
-    profile_row = get_user_and_profile(user_id)  # username/email + profile fields
+    # Fetch updated profile to display
+    profile_row = get_user_and_profile(user_id)
     return render_template("profile.html", message=message, profile=profile_row)
+
 
 
 # ----------------------------------
@@ -124,17 +135,23 @@ def logout():
 
 @app.route("/matches")
 def matches():
-    if "user_id" not in session:
+    user_id = session.get("user_id")
+    if not user_id:
         return redirect(url_for("login"))
 
-    user_id = session["user_id"]
-    me = get_user_and_profile(user_id) or {}
-    candidates = get_profiles_except(user_id)
+    me = get_user_and_profile(user_id)
+    candidates = get_profiles_except(user_id) or []
+    ranked = []
 
-    matches_flat = candidates
-    ranked_list = rank_candidates(me, candidates)
+    # Only rank if there are candidates
+    if candidates:
+        ranked = rank_candidates(me, candidates)
+    else:
+        # Avoid template crash if no matches exist
+        candidates = [{"username": "No matches yet"}]
+        ranked = [{"profile": {"username": "No matches yet", "location": "", "budget": "", "lifestyle": ""}, "score": 0}]
 
-    return render_template("matches.html", profiles=matches_flat, ranked=ranked_list)
+    return render_template("matches.html", ranked=ranked, profiles=candidates)
 
 @app.route("/admin/users")
 def admin_users():
