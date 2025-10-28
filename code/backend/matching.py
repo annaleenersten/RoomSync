@@ -12,10 +12,10 @@ EXPECTED PROFILE FIELDS (strings OK; normalization is built-in):
   "budget": "800",
   "location": "Seattle",
   "lifestyle": "early sleeper",
-  # optional extras:
-  # "smoking": "no",
-  # "pets": "yes",
-  # "cleanliness": "medium"
+  optional extras:
+  "smoking": "no",
+  "pets": "yes",
+  "cleanliness": "medium"
 }
 """
 
@@ -27,9 +27,9 @@ DEFAULT_WEIGHTS = {
     "budget": 30,
     "lifestyle": 30,
     # Optional extras 
-    # "smoking": 15,
-    # "pets": 10,
-    # "cleanliness": 10,
+    "smoking": 15,
+    "pets": 10,
+    "cleanliness": 10,
 }
 
 def _norm(s: str | None) -> str:
