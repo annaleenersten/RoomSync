@@ -121,13 +121,16 @@ def get_profiles_except(user_id: int):
     conn = get_db()
     cur = conn.cursor()
     cur.execute("""
-        SELECT u.id AS user_id, u.username, u.email,
-               COALESCE(p.budget, '') AS budget,
-               COALESCE(p.location, '') AS location,
-               COALESCE(p.lifestyle, '') AS lifestyle
-                COALESCE(p.smoking, '') AS smoking,
-                COALESCE(p.pets, '') AS pets,
-                COALESCE(p.cleanliness, '') AS cleanliness
+        SELECT 
+            u.id AS user_id,
+            u.username,
+            u.email,
+            COALESCE(p.budget, '') AS budget,
+            COALESCE(p.location, '') AS location,
+            COALESCE(p.lifestyle, '') AS lifestyle,
+            COALESCE(p.smoking, '') AS smoking,
+            COALESCE(p.pets, '') AS pets,
+            COALESCE(p.cleanliness, '') AS cleanliness
         FROM users u
         LEFT JOIN profiles p ON p.user_id = u.id
         WHERE u.id <> ?
