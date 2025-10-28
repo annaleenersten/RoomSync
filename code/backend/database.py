@@ -2,15 +2,6 @@
 database.py
 Handles SQLite database connection and queries.
 
-Sprint 1 Tasks:
-- Create roommate.db in /data if it doesn’t exist.
-- Implement:
-  - init_db() → create tables (users, profiles).
-  - add_user(email, username, hashed_pw).
-  - get_user_by_email(email).
-  - add_profile(user_id, budget, location, lifestyle).
-  - get_all_profiles() → return all profiles (for matches).
-
 TEAM OWNER: Database 1 (Profiles) & Database 2 (Matches) (Emery)
 """
 
