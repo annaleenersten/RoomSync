@@ -49,13 +49,11 @@ Please review the following code files, which were actively developed during thi
 ## Retrospective Summary
 Here's what went well
 * The team successfully implemented key backend and database features, resulting in a functional prototype with persistent data and a working matching system.  
-* Collaboration improved across all roles — backend, frontend, and design — with consistent communication during development and debugging.  
-* We established a smoother Git workflow using branches and pull requests to maintain clean integration.  
-* Regular weekly meetings helped track progress, identify blockers, and ensure feature alignment with our user stories.  
+* Collaboration improved across all roles — backend, frontend, and design — with consistent communication during development and debugging.   
+* Regular meetings helped track progress, identify blockers, and ensure feature alignment with our user stories.  
 
 Here's what we'd like to improve
-* Improve coordination between the Flask backend and the HTML frontend templates to ensure consistent user flow and data rendering.  
-* Increase the frequency of code reviews to catch logical and formatting issues earlier.  
+* Improve coordination between the Flask backend and the HTML frontend templates to ensure consistent user flow and data rendering.   
 * Dedicate more time to automated testing and validation to ensure new changes don’t break existing functionality.  
 
 Here are changes we plan to implement in the next sprint
