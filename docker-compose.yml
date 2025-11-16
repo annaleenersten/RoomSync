@@ -1,0 +1,14 @@
+services:
+  backend:
+    build: .
+    ports:
+      - "5001:5000"
+    volumes:
+      - ./code/backend:/app/backend
+      - ./code/frontend:/app/frontend
+      - roommate_db:/app/backend/data
+    environment:
+      - FLASK_SECRET=supersecretkey
+
+volumes:
+  roommate_db:

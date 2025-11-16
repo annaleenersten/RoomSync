@@ -12,7 +12,7 @@ import sqlite3
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 # Build an absolute path to ../data/roommate.db
-DB_PATH = os.path.join(BASE_DIR, "..", "..", "data", "roommate.db")
+DB_PATH = os.path.join(BASE_DIR, "data", "roommate.db")
 
 def get_db():
     conn = sqlite3.connect(DB_PATH)
