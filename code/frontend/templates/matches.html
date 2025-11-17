@@ -49,11 +49,9 @@
             <p class="card-text">
               Location: {{ match.profile.location or 'Not set' }} <br>
               Budget: ${{ match.profile.budget or 'Not set' }} <br>
-              Lifestyle: {{ match.profile.lifestyle or 'Not set' }}
+              Lifestyle: {{ match.profile.lifestyle or 'Not set' }} <br>
+              Email: {{ match.profile.email or 'Not set' }}
             </p>
-            <a href="#" class="btn btn-outline-light">
-              Contact
-            </a>
           </div>
         </div>
       </div>
@@ -67,46 +65,3 @@
 
 </body>
 </html>
-
-<!-- 
-19OCT Note from backend (delete when finished):
-
-Data sources and available variables
-
-  From database.py (backend data layer):
-    - get_profiles_except(user_id)  -> list of all other users (each with username, email, budget, location, lifestyle)
-    - get_user_and_profile(user_id) -> used internally to get the current user’s info
-
-  From matching.py (algorithm layer):
-    - compatibility_score(me, other)
-    - rank_candidates(me, candidates)  -> produces ranked list based on budget/location/lifestyle similarity
-
-
-Template context for this page (/matches):
-
-  You receive TWO lists:
-    1. profiles -> flat list of all other users (raw data)
-       Example access:
-         {{ profiles[0].username }}
-         {{ profiles[0].budget }}
-         {{ profiles[0].location }}
-
-    2. ranked -> list of dicts with structure:
-         {
-           "profile": {...same fields as above...},
-           "score": <int compatibility score>
-         }
-       Example access:
-         {{ ranked[0].profile.username }}
-         {{ ranked[0].score }}
-
-Suggested usage:
-  - You can iterate through "ranked" to display top matches sorted by compatibility:
-      {% for match in ranked %}
-        <div>{{ match.profile.username }} (Score: {{ match.score }})</div>
-      {% endfor %}
-  - Or, use "profiles" if you want to show all users without ranking
-
-All data is already pulled from the database automatically
-No API calls needed; just render the fields from these lists
--->
