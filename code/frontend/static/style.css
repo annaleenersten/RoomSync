@@ -13,16 +13,7 @@ body{
 /* Homepage */
 
 main h1{
-    padding-top: 3.5rem;
-}
-
-main h2{
-    color:#6BA292;
-}
-
-#columns{
-    margin-top: 5%;
-    font-weight: 500;
+  padding-top: 3.5rem;
 }
 
 .hero {
@@ -42,6 +33,20 @@ main h2{
   font-weight: 400;
   margin-top: 1rem;
 } 
+
+.columns .col-lg-4{
+  margin-top: 5%;
+  text-align: center;
+}
+
+.columns .col-lg-4 img{
+  background-color: #6BA292;
+}
+
+.columns h3{
+  padding-top: 1rem;
+  color:#6BA292;
+}
 
 /* navbar */
 
@@ -70,7 +75,7 @@ main h2{
 /* login page */
 
 .card{
-    width: 25%;
+  width: 25%;
 }
 
 .card h3{
@@ -79,10 +84,10 @@ main h2{
 }
 
 .card{
-    padding-top: 2%;
-    padding-bottom: 3%;
-    border-radius: 5%;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding-top: 2%;
+  padding-bottom: 3%;
+  border-radius: 3%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .card-body {
@@ -122,3 +127,22 @@ main h2{
     background-color:#F9FAF9;
     color:#2C3E50;
 }
+
+/* profile page */
+
+#profile{
+  margin-top: 3rem;
+  padding: 5%;
+  border-radius: 2%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-width: 35%;
+}
+
+#profile h3 {
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+#profile h6 {
+  font-weight: 400;
+} 
