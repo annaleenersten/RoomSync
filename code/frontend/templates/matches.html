@@ -43,21 +43,41 @@
             alt="user icon"
             style="width: 50%; height: auto; object-fit: cover; display: block;"
           >
-          
+        
           <div class="card-body">
-            <h5 class="card-title">{{ match.profile.username }} (Score: {{ match.score }})</h5>
-            <p class="card-text">
-              Location: {{ match.profile.location or 'Not set' }} <br>
-              Budget: ${{ match.profile.budget or 'Not set' }} <br>
-              Lifestyle: {{ match.profile.lifestyle or 'Not set' }} <br>
-              Email: {{ match.profile.email or 'Not set' }}
-            </p>
-          </div>
+              <h5 class="card-title">{{ match.profile.username }} (Score: {{ match.score }})</h5>
+
+              <p class="card-text mb-2">
+                Location: {{ match.profile.location or 'Not set' }} <br>
+                Budget: ${{ match.profile.budget or 'Not set' }} <br>
+                Lifestyle: {{ match.profile.lifestyle or 'Not set' }}
+              </p>
+
+
+              <button class="btn btn-outline-light" type="button" data-bs-toggle="collapse" data-bs-target="#extra{{ loop.index }}" aria-expanded="false" aria-controls="extra{{ loop.index }}">
+              More Info >>
+              </button>
+
+  
+              <div class="collapse mt-2" id="extra{{ loop.index }}">
+                <p class="card-text mb-0">
+                  Smoking: {{ match.profile.smoking or 'Not set' }} <br>
+                  Pets: {{ match.profile.pets or 'Not set' }} <br>
+                  Cleanliness: {{ match.profile.cleanliness or 'Not set' }} <br>
+                  Email: {{ match.profile.email or 'Not set' }}
+                </p>
+              </div>
+        </div>
+
         </div>
       </div>
     {% endfor %}
   </div>
 </div>
+
+ <footer class="bg-forest text-light text-center py-3 mt-5">
+    
+    </footer>
 
 
 <!-- JavaScript -->

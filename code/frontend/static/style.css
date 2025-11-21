@@ -2,7 +2,6 @@
 
 body{
     font-family: "Encode Sans Expanded", sans-serif;
-    /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
     font-weight: 400;
     font-style: normal;
     color: #2C3E50;
@@ -19,9 +18,9 @@ main h1{
 .hero {
     text-align: center;
     padding: 100px 20px;
-    /* background: linear-gradient(rgba(255, 255, 255, 0.387), rgba(181, 181, 181, 0.408)), url(real-estate-9053405_1280.jpg); */
-    background-color: rgba(179, 177, 175, 0.151);
-    background-position: 10%;
+    background-color: #F5F5F3;
+    /* background-color: #E7E6E2; */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .hero h1 {
@@ -111,6 +110,11 @@ main h1{
 #matchCard{
     border-radius: 0%;
     border: 0;
+    padding: 0;
+}
+
+#matchCard .card-text{
+  padding-bottom: 1rem;
 }
 
 #matchTitle{
@@ -126,6 +130,7 @@ main h1{
 .btn:hover{
     background-color:#F9FAF9;
     color:#2C3E50;
+    border-color: #2C3E50;
 }
 
 /* profile page */
