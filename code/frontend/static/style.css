@@ -51,7 +51,6 @@ main h1{
 
 .bg-forest {
   background-color: #6BA292 !important;
-  /* background-color: #7CC1A4 !important; */
 }
 
 .navbar-brand:hover{
@@ -104,7 +103,7 @@ main h1{
 }
 
 .form-control:focus {
-  box-shadow: 0 0 8px rgba(129, 199, 132, 0.5); /* green glow */
+  box-shadow: 0 0 8px rgba(129, 199, 132, 0.5); 
   border-color: #81C784;
 }
 
@@ -114,8 +113,7 @@ main h1{
 }
 
 .form-select option {
-  color: white;
-  background-color:#6BA292;
+  background-color:#F5F5F3;
 }
 
 
