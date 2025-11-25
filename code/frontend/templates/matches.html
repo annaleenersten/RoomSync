@@ -55,7 +55,7 @@
 
 
               <button class="btn btn-outline-light" type="button" data-bs-toggle="collapse" data-bs-target="#extra{{ loop.index }}" aria-expanded="false" aria-controls="extra{{ loop.index }}">
-              More Info >>
+              More Info <span class="arrow">&#9662;</span>
               </button>
 
   
@@ -64,7 +64,7 @@
                   Smoking: {{ match.profile.smoking or 'Not set' }} <br>
                   Pets: {{ match.profile.pets or 'Not set' }} <br>
                   Cleanliness: {{ match.profile.cleanliness or 'Not set' }} <br>
-                  Email: {{ match.profile.email or 'Not set' }}
+                  <strong>Email: {{ match.profile.email or 'Not set' }}</strong>
                 </p>
               </div>
         </div>

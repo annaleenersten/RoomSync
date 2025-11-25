@@ -29,6 +29,8 @@
 
 <div class="container" id="profile">
   <br>
+  <h2 class="profile-title">My Profile</h2>
+  
   <h3>{{ profile.username }}</h3>
 
   <br>
@@ -71,23 +73,29 @@
           </div>
 
           <div class="mb-3">
-            <label for="smoking" class="form-label">Smoking (yes/no)</label>
-            <input type="text" class="form-control" id="smoking" name="smoking"
-                   value="{{ profile.smoking or '' }}">
+            <label for="smoking" class="form-label">Smoking</label>
+              <select class="form-select" id="smoking" name="smoking">
+                <option value="no" {% if profile.smoking == "no" %}selected{% endif %}>No</option>
+                <option value="yes" {% if profile.smoking == "yes" %}selected{% endif %}>Yes</option>
+              </select>
           </div>
 
           <div class="mb-3">
-            <label for="pets" class="form-label">Pets (yes/no)</label>
-            <input type="text" class="form-control" id="pets" name="pets"
-                   value="{{ profile.pets or '' }}">
+            <label for="pets" class="form-label">Pets</label>
+              <select class="form-select" id="pets" name="pets">
+                <option value="no" {% if profile.pets == "no" %}selected{% endif %}><strong>No</strong></option>
+                <option value="yes" {% if profile.pets == "yes" %}selected{% endif %}><strong>Yes</strong></option>
+          </select>
           </div>
 
           <div class="mb-3">
-            <label for="cleanliness" class="form-label">Cleanliness (1-10)</label>
+            <label for="cleanliness" class="form-label">Cleanliness</label>
             <input type="text" class="form-control" id="cleanliness" name="cleanliness"
-                   value="{{ profile.cleanliness or '' }}">
+                   value="{{ profile.cleanliness or '' }}"  placeholder="Rate 1–10">
+                  <div class="form-text">
+                        1 = very messy, 5 = average, 10 = extremely clean
+                  </div>
           </div>
-
 
           <button type="submit" class="btn btn-outline-light w-100">Save Changes</button>
         </form>
