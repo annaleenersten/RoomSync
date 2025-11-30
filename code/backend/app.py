@@ -8,7 +8,17 @@ TEAM OWNER: Jordan (Backend & Security)
 import os
 from flask import Flask, render_template, request, redirect, url_for, session
 from auth_utils import hash_password, verify_password
-from database import init_db, get_db, add_user, get_user_by_login, get_user_by_username, get_user_and_profile, get_profiles_except
+from database import (
+    init_db,
+    get_db,
+    add_user,
+    get_user_by_login,
+    get_user_by_username,
+    get_user_and_profile,
+    get_profiles_except,
+    record_accepted_match,
+    delete_profiles_for_old_matches,
+)
 from matching import rank_candidates
 
 # ---- Tell Flask where templates/static actually are ----
@@ -64,13 +74,13 @@ def login():
     if request.method == "GET":
         return render_template("login.html", message=None)
 
-    username = (request.form.get("username") or "").strip()   
+    username = (request.form.get("username") or "").strip()
     password = (request.form.get("password") or "").strip()
 
     if not username or not password:
         return render_template("login.html", message="Please enter username and password.")
 
-    user = get_user_by_username(username)  
+    user = get_user_by_username(username)
     if user and verify_password(password, user["password_hash"]):
         session["user_id"] = user["id"]
         session["username"] = user["username"]
@@ -125,8 +135,6 @@ def profile():
     profile_row = get_user_and_profile(user_id)
     return render_template("profile.html", message=message, profile=profile_row)
 
-
-
 # ----------------------------------
 @app.route("/logout")
 def logout():
@@ -153,8 +161,33 @@ def matches():
 
     return render_template("matches.html", ranked=ranked, profiles=candidates)
 
+# ----------------------------------
+# Accept a match and trigger cleanup
+# ----------------------------------
+@app.route("/matches/accept/<int:other_id>", methods=["POST"])
+def accept_match(other_id):
+    """
+    Called when the current user accepts a match with another user.
+    Records the accepted match and runs profile cleanup for matches
+    older than 10 days.
+    """
+    user_id = session.get("user_id")
+    if not user_id:
+        return redirect(url_for("login"))
+
+    # Record the accepted match (user_id <-> other_id)
+    record_accepted_match(user_id, other_id)
+
+    # Run cleanup to delete profiles for any matches accepted 10+ days ago
+    delete_profiles_for_old_matches(days=10)
+
+    return redirect(url_for("matches"))
+
 @app.route("/admin/users")
 def admin_users():
+    # Also run cleanup here so admins always see a "fresh" system
+    delete_profiles_for_old_matches(days=10)
+
     db = get_db()
     rows = db.execute("SELECT id, email, username FROM users ORDER BY id").fetchall()
     html = ["<h3>All Users</h3><table border='1' cellpadding='6'>",

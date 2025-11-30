@@ -67,6 +67,14 @@
                   <strong>Email: {{ match.profile.email or 'Not set' }}</strong>
                 </p>
               </div>
+
+              {% if match.profile.user_id %}
+              <form action="{{ url_for('accept_match', other_id=match.profile.user_id) }}" method="post" class="mt-3">
+                <button type="submit" class="btn btn-primary w-100">
+                  Accept Match
+                </button>
+              </form>
+              {% endif %}
         </div>
 
         </div>

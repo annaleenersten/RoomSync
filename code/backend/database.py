@@ -11,7 +11,7 @@ import sqlite3
 # Get the directory this file lives in
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
-# Build an absolute path to ../data/roommate.db
+# Build an absolute path to data/roommate.db (inside backend/data)
 DB_PATH = os.path.join(BASE_DIR, "data", "roommate.db")
 
 def get_db():
@@ -42,6 +42,19 @@ def init_db():
             pets TEXT,
             cleanliness TEXT,
             FOREIGN KEY(user_id) REFERENCES users(id)
+        )
+    """)
+
+    # Matches table to track accepted matches and acceptance time
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS matches (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user1_id INTEGER NOT NULL,
+            user2_id INTEGER NOT NULL,
+            status TEXT NOT NULL DEFAULT 'accepted',
+            accepted_at TEXT NOT NULL,
+            FOREIGN KEY(user1_id) REFERENCES users(id),
+            FOREIGN KEY(user2_id) REFERENCES users(id)
         )
     """)
 
@@ -143,24 +156,22 @@ def get_profiles_except(user_id: int):
 def get_user_by_email(email):
     # Database 1
     conn = sqlite3.connect(DB_PATH)
-    c= conn.cursor() 
+    c = conn.cursor()
     c.execute("SELECT * FROM users WHERE email=?", (email,))
     row = c.fetchone()
     conn.close()
     return dict(row) if row else None
-    #pass
 
 def add_profile(user_id, budget, location, lifestyle, smoking, pets, cleanliness):
     # Database 1
     conn = sqlite3.connect(DB_PATH)
-    c= conn.cursor() 
+    c = conn.cursor()
     c.execute("""
         INSERT INTO profiles (user_id, budget, location, lifestyle, smoking, pets, cleanliness)
         VALUES (?, ?, ?, ?, ?, ?, ?)
     """, (user_id, budget, location, lifestyle, smoking, pets, cleanliness))
     conn.commit()
     conn.close()
-    pass
 
 def get_all_profiles():
     # Database 2
@@ -170,3 +181,45 @@ def get_all_profiles():
     rows = cur.fetchall()
     conn.close()
     return [dict(r) for r in rows]
+
+# -------------------------
+# Matches + cleanup helpers
+# -------------------------
+
+def record_accepted_match(user1_id: int, user2_id: int):
+    """
+    Record that two users have accepted a match.
+    Stores timestamp so we can clean up profiles after 10 days.
+    """
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("""
+        INSERT INTO matches (user1_id, user2_id, status, accepted_at)
+        VALUES (?, ?, 'accepted', datetime('now'))
+    """, (user1_id, user2_id))
+    conn.commit()
+    conn.close()
+
+def delete_profiles_for_old_matches(days: int = 10):
+    """
+    Delete profiles for users whose match was accepted at least `days` days ago.
+    This satisfies the requirement: delete user profiles 10 days after
+    a successful match is accepted.
+    """
+    conn = get_db()
+    cur = conn.cursor()
+    # Find all user_ids in accepted matches older than N days
+    cur.execute("""
+        DELETE FROM profiles
+        WHERE user_id IN (
+            SELECT user1_id FROM matches
+            WHERE status = 'accepted'
+              AND accepted_at <= datetime('now', ?)
+            UNION
+            SELECT user2_id FROM matches
+            WHERE status = 'accepted'
+              AND accepted_at <= datetime('now', ?)
+        )
+    """, (f'-{days} days', f'-{days} days'))
+    conn.commit()
+    conn.close()
