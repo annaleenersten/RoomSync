@@ -23,12 +23,12 @@ from __future__ import annotations
 from typing import Any, Iterable, Mapping
 
 DEFAULT_WEIGHTS = {
-    "location": 40,
-    "budget": 30,
-    "lifestyle": 30,
+    "location": 35,
+    "budget": 20,
+    "lifestyle": 20,
     # Optional extras 
-    "smoking": 15,
-    "pets": 10,
+    "smoking": 10,
+    "pets": 5,
     "cleanliness": 10,
 }
 
