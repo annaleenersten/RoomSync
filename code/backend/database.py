@@ -3,8 +3,6 @@ database.py
 Handles SQLite database connection and queries.
 
 TEAM OWNER: Database 1 (Profiles) & Database 2 (Matches) (Emery)
-
-**Line addition to test DB persistence**
 """
 
 import os
