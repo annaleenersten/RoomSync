@@ -64,14 +64,14 @@
 
                 {% if match.profile.user_id %}
                     <form action="{{ url_for('accept_match', other_id=match.profile.user_id) }}" method="post" class="mt-3">
-                        <button type="submit" class="btn btn-outline-light w-100 mb-2">
+                        <button type="submit" class="btn btn-outline-light w-100">
                             Accept Match
                         </button>
                     </form>
 
                     <div class="d-flex gap-2">
-                        <button class="btn btn-outline-light w-50" onclick="blockUser('{{ match.profile.user_id }}', this)">Block</button>
-                        <button class="btn btn-outline-light w-50" onclick="reportUser('{{ match.profile.user_id }}')">Report</button>
+                        <button class="btn btn-outline-light w-50 mb-0" onclick="blockUser('{{ match.profile.user_id }}', this)">Block</button>
+                        <button class="btn btn-outline-light w-50 mb-0" onclick="reportUser('{{ match.profile.user_id }}')">Report</button>
                     </div>
                 {% endif %}
             </div>
