@@ -31,11 +31,11 @@
     
     {% for match in ranked %}
         {% if match.profile %}
-        <div class="card mb-4" style="max-width: 18rem; border-radius: 1rem;">
+        <div class="card mb-2" style="max-width: 18rem; border-radius: 1rem;">
             
             <img 
                 src="{{ url_for('static', filename='userIcon.jpg') }}"
-                class="card-img-top rounded-circle mt-4"
+                class="card-img-top rounded-circle mt-2"
                 alt="user icon"
                 style="width: 50%; height: auto; object-fit: cover; margin:auto;"
             >
