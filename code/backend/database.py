@@ -8,11 +8,16 @@ TEAM OWNER: Database 1 (Profiles) & Database 2 (Matches) (Emery)
 import os
 import sqlite3
 
-# Get the directory this file lives in
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
-# Build an absolute path to data/roommate.db (inside backend/data)
-DB_PATH = os.path.join(BASE_DIR, "data", "roommate.db")
+# Detect Railway (or any) cloud env
+RAILWAY_DATA_DIR = os.environ.get("RAILWAY_VOLUME_MOUNT_PATH", "/data")
+
+# Use cloud path if available, else local project path
+DB_PATH = os.path.join(
+    RAILWAY_DATA_DIR if os.path.isdir(RAILWAY_DATA_DIR) else os.path.join(BASE_DIR, "data"),
+    "roommate.db"
+)
 
 def get_db():
     conn = sqlite3.connect(DB_PATH)
@@ -21,6 +26,7 @@ def get_db():
 
 def init_db():
     # Shared: Database 1 + Database 2
+    os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute("""
