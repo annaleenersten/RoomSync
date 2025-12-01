@@ -31,7 +31,7 @@
     
     {% for match in ranked %}
         {% if match.profile %}
-        <div class="card mb-2" style="max-width: 18rem; border-radius: 1rem;">
+        <div class="card" style="max-width: 18rem; border-radius: 1rem;">
             
             <img 
                 src="{{ url_for('static', filename='userIcon.jpg') }}"
@@ -43,13 +43,13 @@
             <div class="card-body">
                 <h5 class="card-title">{{ match.profile.username }} (Score: {{ match.score }})</h5>
                 
-                <p class="card-text mb-2">
+                <p class="card-text">
                     Location: {{ match.profile.location or 'Not set' }} <br>
                     Budget: ${{ match.profile.budget or 'Not set' }} <br>
                     Lifestyle: {{ match.profile.lifestyle or 'Not set' }}
                 </p>
 
-                <button class="btn btn-outline-light mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#extra{{ loop.index }}" aria-expanded="false" aria-controls="extra{{ loop.index }}">
+                <button class="btn btn-outline-light" type="button" data-bs-toggle="collapse" data-bs-target="#extra{{ loop.index }}" aria-expanded="false" aria-controls="extra{{ loop.index }}">
                     More Info <span class="arrow">&#9662;</span>
                 </button>
 
