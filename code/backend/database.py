@@ -63,6 +63,32 @@ def init_db():
             FOREIGN KEY(user2_id) REFERENCES users(id)
         )
     """)
+    
+    # Block table
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS blocks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            blocker_id INTEGER NOT NULL,
+            blocked_id INTEGER NOT NULL,
+            blocked_at TEXT NOT NULL DEFAULT (datetime('now')),
+            UNIQUE(blocker_id, blocked_id),
+            FOREIGN KEY(blocker_id) REFERENCES users(id),
+            FOREIGN KEY(blocked_id) REFERENCES users(id)
+        )
+    """)
+
+    # Report table
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS reports (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            reporter_id INTEGER NOT NULL,
+            reported_id INTEGER NOT NULL,
+            reason TEXT,
+            reported_at TEXT NOT NULL DEFAULT (datetime('now')),
+            FOREIGN KEY(reporter_id) REFERENCES users(id),
+            FOREIGN KEY(reported_id) REFERENCES users(id)
+        )
+    """)
 
     # Uniqueness for auth invariants
     c.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_users_email ON users(email)")
@@ -136,7 +162,7 @@ def get_user_and_profile(user_id: int):
     return dict(row) if row else None
 
 def get_profiles_except(user_id: int):
-    """All other users with their profile fields (if any)."""
+    """All other users with their profile fields (if any), excluding users blocked by current user."""
     conn = get_db()
     cur = conn.cursor()
     cur.execute("""
@@ -153,11 +179,15 @@ def get_profiles_except(user_id: int):
         FROM users u
         LEFT JOIN profiles p ON p.user_id = u.id
         WHERE u.id <> ?
+          AND u.id NOT IN (
+              SELECT blocked_id FROM blocks WHERE blocker_id = ?
+          )
         ORDER BY u.id
-    """, (user_id,))
+    """, (user_id, user_id))
     rows = cur.fetchall()
     conn.close()
     return [dict(r) for r in rows]
+
 
 def get_user_by_email(email):
     # Database 1
@@ -227,5 +257,30 @@ def delete_profiles_for_old_matches(days: int = 10):
               AND accepted_at <= datetime('now', ?)
         )
     """, (f'-{days} days', f'-{days} days'))
+    conn.commit()
+    conn.close()
+    
+def block_user(blocker_id: int, blocked_id: int):
+    """Insert a block entry; prevents match/display."""
+    conn = get_db()
+    cur = conn.cursor()
+    try:
+        cur.execute("""
+            INSERT OR IGNORE INTO blocks (blocker_id, blocked_id)
+            VALUES (?, ?)
+        """, (blocker_id, blocked_id))
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def report_user(reporter_id: int, reported_id: int, reason: str):
+    """Record user reports for admin review."""
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("""
+        INSERT INTO reports (reporter_id, reported_id, reason)
+        VALUES (?, ?, ?)
+    """, (reporter_id, reported_id, reason))
     conn.commit()
     conn.close()

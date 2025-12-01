@@ -6,7 +6,7 @@ TEAM OWNER: Jordan (Backend & Security)
 """
 
 import os
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from auth_utils import hash_password, verify_password
 from database import (
     init_db,
@@ -19,6 +19,7 @@ from database import (
     record_accepted_match,
     delete_profiles_for_old_matches,
 )
+import database as db
 from matching import rank_candidates
 
 # ---- Tell Flask where templates/static actually are ----
@@ -197,6 +198,38 @@ def admin_users():
     html.append("</table>")
     return "".join(html)
 # ----------------------------------
+
+# --------------------------------------------------
+# Joe – Block & Report user
+# --------------------------------------------------
+@app.route("/block", methods=["POST"])
+def block_user_route():
+    data = request.json
+    blocker_id = data.get("blocker_id")
+    blocked_id = data.get("blocked_id")
+
+    if not blocker_id or not blocked_id:
+        return jsonify({"error": "Missing blocker_id or blocked_id"}), 400
+
+    db.block_user(blocker_id, blocked_id)
+    return jsonify({"message": "User blocked successfully"})
+
+
+@app.route("/report", methods=["POST"])
+def report_user_route():
+    data = request.json
+    reporter_id = data.get("reporter_id")
+    reported_id = data.get("reported_id")
+    reason = data.get("reason", "")
+
+    if not reporter_id or not reported_id:
+        return jsonify({"error": "Missing reporter_id or reported_id"}), 400
+
+    db.report_user(reporter_id, reported_id, reason)
+    return jsonify({"message": "User reported successfully"})
+
+# ----------------------------------
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5001)), debug=False)
