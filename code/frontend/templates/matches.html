@@ -31,7 +31,7 @@
     
     {% for match in ranked %}
         {% if match.profile %}
-        <div class="card" style="max-width: 18rem; border-radius: 1rem;">
+        <div class="card" id="matchCard" style="max-width: 18rem; border-radius: 1rem;">
             
             <img 
                 src="{{ url_for('static', filename='userIcon.jpg') }}"
